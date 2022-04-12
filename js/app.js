@@ -19,17 +19,58 @@ const seattle = {
     maxCustomers: 65,
     avgCookiePerCustomer: 6.3,
     randomCookiesPerHour: [],
+    totalCookiesSold: 0,
     generateRandomCookiesPerHour: function () {
         //generate values to populate randomCookiesPerHour
         // array should have slots for 6am through 7pm (and maybe totals)
+        let total = 0;
         for (let i = 0; i < hours.length; i++){
             const randomCustomersPerHour = randomInRange(this.minCustomers, this.maxCustomers);
-            this.randomCookiesPerHour[i] = Math.ceil(this.avgCookiePerCustomer * randomCustomersPerHour);
+            const cookiesSold = Math.ceil(this.avgCookiePerCustomer * randomCustomersPerHour);
+            this.randomCookiesPerHour[i] = cookiesSold;
+            total += cookiesSold;
         }
-    }
-};
+        this.totalCookiesSold = total;
+    },
+    render: function() {
+        // get on screeen
+        const containerElem = document.getElementById(`cookie-stand-locations`);
+
+        // article
+        const articleElem = document.createElement(`article`);
+        containerElem.appendChild(articleElem);
+
+        // heading
+        const headingElem = document.createElement(`h2`);
+        articleElem.appendChild(headingElem);
+        headingElem.textContent = this.title; 
+
+        // ul
+        const ulElem = document.createElement(`ul`);
+        articleElem.appendChild(ulElem);
+
+        // list items
+        for(let i=0; i < this.randomCookiesPerHour.length; i++) {
+            const liElem = document.createElement(`li`);
+            ulElem.appendChild(liElem);
+            const timeSlot = hours[i];
+            const cookiesSoldThisHour = this.randomCookiesPerHour[i]
+            liElem.textContent = `${timeSlot}: ${cookiesSoldThisHour}`;
+        }
+
+        // total sales
+        const liElem = document.createElement(`li`);
+        ulElem.appendChild(liElem);
+        liElem.textContent = `Total: ` + this.totalCookiesSold;
+
+        }
+
+    };
+
+
 
 seattle.generateRandomCookiesPerHour();
+seattle.render()
 
 const lima = {
     title: "Lima",
@@ -37,13 +78,18 @@ const lima = {
     maxCustomers: 16,
     avgCookiePerCustomer: 4.6,
     randomCookiesPerHour: [],
+    totalCookiesSold: 0,
     generateRandomCookiesPerHour: function () {
         //generate values to populate randomCookiesPerHour
         // array should have slots for 6am through 7pm (and maybe totals)
+        let total = 0;
         for (let i = 0; i < hours.length; i++){
             const randomCustomersPerHour = randomInRange(this.minCustomers, this.maxCustomers);
-            this.randomCookiesPerHour[i] = Math.ceil(this.avgCookiePerCustomer * randomCustomersPerHour);
+            constCookiesSold = Math.ceil(this.avgCookiePerCustomer * randomCustomersPerHour);
+            this.randomCookiesPerHour[i] = constCookiesSold;
+            total += constCookiesSold;
         }
+        this.totalCookiesSold = total;
     }
 };
 

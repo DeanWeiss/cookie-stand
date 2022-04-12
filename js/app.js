@@ -1,6 +1,6 @@
 `use strict`;
 /*
-Cookie Stand Object will have ....
+Cookie Stand Object will have ...
 {
     title: "The City/Location",
     minCustomers: int,

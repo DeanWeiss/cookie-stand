@@ -1,6 +1,6 @@
 'use strict';
 
-const hours = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm'];
+const hours = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm',];
 let tableElem = null;
 
 function CookieStand(location, minCustomersPerHour, maxCustomersPerHour, avgCookiesPerCustomer) {
@@ -8,16 +8,21 @@ function CookieStand(location, minCustomersPerHour, maxCustomersPerHour, avgCook
   this.minCustomersPerHour = minCustomersPerHour;
   this.maxCustomersPerHour = maxCustomersPerHour;
   this.avgCookiesPerCustomer = avgCookiesPerCustomer;
-  this.cookieSales = []; 
+  this.customershour = [];
+  this.cookieSales = [];
+  this.dailyLocationTotals = 0; 
   this.generateCookieSales();
 }
 
 CookieStand.prototype.generateCookieSales = function () {
+  let locationTotal = 0;
   for (let i = 0; i < hours.length; i++) {
     const simulatedCustomersPerHour = randomInRange(this.minCustomersPerHour, this.maxCustomersPerHour);
     const simulatedSales = Math.ceil(simulatedCustomersPerHour * this.avgCookiesPerCustomer);
     this.cookieSales.push(simulatedSales);
+    locationTotal += simulatedSales;
   }
+  this.dailyLocationTotals = locationTotal;
 }
 
 CookieStand.prototype.render = function () {
@@ -27,6 +32,7 @@ CookieStand.prototype.render = function () {
   const locationElem = document.createElement('td');
   rowElem.appendChild(locationElem);
   locationElem.textContent = this.location;
+  
 
   for (let i = 0; i < this.cookieSales.length; i++) {
     const salesElem = document.createElement('td');
@@ -36,7 +42,7 @@ CookieStand.prototype.render = function () {
 
   const totalElem = document.createElement('td');
   rowElem.appendChild(totalElem);
-  totalElem.textContent = '???'
+  totalElem.textContent = this.dailyLocationTotals;
 }
 
 function randomInRange(min, max) {
@@ -52,6 +58,9 @@ function createTable() {
 function createHeaderRow() {
   const headerRowElem = document.createElement('tr');
   tableElem.appendChild(headerRowElem);
+  const headerCellElem = document.createElement('th');
+  headerRowElem.appendChild(headerCellElem);
+  headerCellElem.textContent = ''
   for (let i = 0; i < hours.length; i++) {
     const headerCellElem = document.createElement('th');
     headerRowElem.appendChild(headerCellElem);
@@ -61,23 +70,42 @@ function createHeaderRow() {
 }
 
 function createFooterRow() {
-
-  const footerRowElem = document.createElement('tr');
+  const footerRowElem = document.createElement('tfoot');
   tableElem.appendChild(footerRowElem);
+  const footerCellElem = document.createElement('th');
+  footerRowElem.appendChild(footerCellElem);
+  footerCellElem.textContent = 'Total'
+  var hourlyTotals = getHourlyTotalsAcrossShops();
   for (let i = 0; i < hours.length; i++) {
     const footerCellElem = document.createElement('th');
     footerRowElem.appendChild(footerCellElem);
-    footerCellElem.textContent = getHourlyTotalsAcrossShops();
+    footerCellElem.textContent = hourlyTotals[i];
   }
 }
 
-function getHourlyTotalsAcrossShops() {
-    return 123; // TODO: need real values
-  }
+// function getTotalHoursByShop () {
+//   let shopTotalsArray = [];
+//   for (let i = 0; i < cookieStands.length; i++){
+//   let shopTotal = 0
+//   for ( let j = 0; j < hours.length; j++ ){
+//     shopTotal += cookieStands[i].cookieSales[j];
+//   }
+//   shopTotalsArray.push(shopTotal);
+//   }
+//   return shopTotalsArray
+// }
 
-createTable();
-createHeaderRow();
-createFooterRow();
+function getHourlyTotalsAcrossShops() {
+    let hourlyTotalsArray = [];
+    for (let i = 0; i < hours.length; i++){
+      let hoursTotal = 0
+      for (let j = 0; j < cookieStands.length; j++){
+      hoursTotal += cookieStands[j].cookieSales[i];
+      }
+      hourlyTotalsArray.push(hoursTotal);
+    }
+    return hourlyTotalsArray
+  }
 
 const cookieStands = [
   new CookieStand('Seattle', 23, 65, 6.3),
@@ -86,6 +114,10 @@ const cookieStands = [
   new CookieStand('Paris', 20, 38, 2.3),
   new CookieStand('Lima', 2, 16, 4.6)
 ];
+
+createTable();
+createHeaderRow();
+createFooterRow();
 
 for (let i = 0; i < cookieStands.length; i++) {
   cookieStands[i].render();

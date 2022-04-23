@@ -115,6 +115,14 @@ const cookieStands = [
   new CookieStand('Lima', 2, 16, 4.6)
 ];
 
+//  function handleSubmit(event) {
+//    event.preventDefault();
+//  alert("Form submitted");
+//  }
+
+//  const formElem = document.getElementById('my-form');
+//  formElem.addEventListener('submit', handleSubmit);
+
 createTable();
 createHeaderRow();
 createFooterRow();
